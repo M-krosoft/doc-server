@@ -1,4 +1,5 @@
 import io
+import os
 
 import numpy as np
 from PIL import Image
@@ -49,4 +50,5 @@ def index():
 app.register_blueprint(doc_scanner_bp, url_prefix='/doc-scanner')
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0", port=port)

@@ -1,0 +1,1 @@
+Serwis do wczytywania paragonów z weba.

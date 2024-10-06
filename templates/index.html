@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Scanner</title>
+    <link rel="stylesheet" href="../static/styles.css">
+
+    <script>
+        function showSelectedImage(event) {
+            const file = event.target.files[0];
+            const imgElement = document.getElementById('selectedImage');
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function displayImage(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            fetch('/doc-scanner/scan', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const imgElement = document.getElementById('scannedImage');
+                    imgElement.src = url;
+                    imgElement.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Wystąpił błąd podczas skanowania.');
+                });
+        }
+    </script>
+
+</head>
+
+<body>
+<div class="container">
+    <h1 class="scan-title">Scan Your First Image</h1>
+    <div class="column">
+        <form class="file-form" action="/doc-scanner/scan" method="POST" enctype="multipart/form-data"
+              onsubmit="displayImage(event)">
+            <input class="file-input" type="file" id="file" name="file" accept="image/*" required
+                   onchange="showSelectedImage(event)">
+            <br>
+            <button type="submit">Skanuj</button>
+        </form>
+
+        <div class="row">
+            <div class="column">
+                <h3>Choosen image:</h3>
+                <img id="selectedImage" alt="Choosen image"/>
+            </div>
+
+            <div class="column">
+                <h3>Scanned image:</h3>
+                <img id="scannedImage" alt="Scanned image"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

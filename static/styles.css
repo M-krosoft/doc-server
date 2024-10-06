@@ -1,0 +1,64 @@
+body,
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    color: white;
+}
+
+.container {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.column {
+    flex: 1;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+}
+
+.scan-title {
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+h3 {
+    text-align: left;
+    width: 100%;
+}
+
+.file-input {
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    transition: border-color 0.3s;
+}
+
+.file-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px
+}
+
+#scannedImage,
+#selectedImage {
+    display: none;
+    max-width: 100%;
+    margin-top: 20px;
+}

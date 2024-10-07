@@ -2,7 +2,6 @@ from flask import Flask, Blueprint, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from app.app_config import Config
-from app.controller import doc_scanner_bp
 
 app_bp = Blueprint('app_bp', __name__)
 db = SQLAlchemy()
@@ -14,6 +13,8 @@ def index():
 
 
 def create_app(config: Config):
+    from app.controller import doc_scanner_bp
+
     _app = Flask(__name__)
     _app.config.from_object(config)
 

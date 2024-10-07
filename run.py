@@ -1,6 +1,6 @@
 import os
 
-from app.app import create_app
+from app import create_app
 from app.app_config import DevelopmentSqliteConfig
 
 config = DevelopmentSqliteConfig()

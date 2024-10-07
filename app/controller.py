@@ -5,7 +5,7 @@ from PIL import Image
 from doc_scanner import run_scan_by_image
 from flask import Blueprint, jsonify, request, send_file
 
-doc_scanner_bp = Blueprint('doc_scanner', __name__)
+doc_scanner_bp = Blueprint('doc_scanner', __name__, url_prefix='/doc-scanner')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
@@ -30,6 +30,9 @@ def scan_image():
     image_np = np.array(image)
 
     scanned_image = run_scan_by_image(image_np)
+
+    # TODO -> convert to text
+
     scanned_image_pil = Image.fromarray(scanned_image)
 
     img_byte_arr = io.BytesIO()

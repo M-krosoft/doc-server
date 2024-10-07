@@ -24,7 +24,7 @@ class DevelopmentConfig(Config):
 
 class DevelopmentSqliteConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///receipt-tracker.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///doc-server.db'
     SECRET_KEY = ''
 
 

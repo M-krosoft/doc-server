@@ -1,15 +1,12 @@
 import io
-import os
 
 import numpy as np
 from PIL import Image
 from doc_scanner import run_scan_by_image
-from flask import Flask, jsonify, request, send_file, Blueprint, render_template
-
-app = Flask(__name__)
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+from flask import Blueprint, jsonify, request, send_file
 
 doc_scanner_bp = Blueprint('doc_scanner', __name__)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
 def allowed_file(filename):
@@ -40,15 +37,3 @@ def scan_image():
     img_byte_arr.seek(0)
 
     return send_file(img_byte_arr, mimetype='image/png')
-
-
-@app.route('/doc-scanner')
-def index():
-    return render_template('index.html')
-
-
-app.register_blueprint(doc_scanner_bp, url_prefix='/doc-scanner')
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port)

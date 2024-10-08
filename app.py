@@ -6,6 +6,8 @@ from PIL import Image
 from doc_scanner import run_scan_by_image
 from flask import Flask, jsonify, request, send_file, Blueprint, render_template
 
+from services.visionService import VisionService
+
 app = Flask(__name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -46,6 +48,24 @@ def scan_image():
 def index():
     return render_template('index.html')
 
+@app.route('/text-recognition', methods=['POST'])
+def text_recognition():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
+    image_file = request.files['image']
+    image_content = image_file.read()
+
+    vision_service = VisionService()
+
+    try:
+        detected_text = vision_service.detect_text_in_image(image_content)
+        if detected_text:
+            return jsonify({'detected_text': detected_text}), 200
+        else:
+            return jsonify({'error': 'No text detected'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 app.register_blueprint(doc_scanner_bp, url_prefix='/doc-scanner')
 

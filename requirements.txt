@@ -7,6 +7,8 @@ doc_scanner @ git+https://github.com/M-krosoft/doc-scanner.git@410950fdb7321d1f4
 Flask==3.0.3
 gunicorn==20.1.0
 idna==3.10
+Flask-SQLAlchemy==3.1.1
+greenlet==3.1.1
 imageio==2.35.1
 imutils==0.5.4
 itsdangerous==2.2.0
@@ -23,6 +25,8 @@ requests==2.32.3
 scikit-image==0.24.0
 scipy==1.14.1
 setuptools==75.1.0
+SQLAlchemy==2.0.35
 tifffile==2024.9.20
 urllib3==2.2.3
+typing_extensions==4.12.2
 Werkzeug==3.0.4

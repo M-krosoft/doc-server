@@ -1,15 +1,14 @@
 import io
-import os
 
 import numpy as np
 from PIL import Image
 from doc_scanner import run_scan_by_image
-from flask import Flask, jsonify, request, send_file, Blueprint, render_template
+from flask import Blueprint, jsonify, request, send_file
 
-app = Flask(__name__)
+from app import repository
+
+doc_scanner_bp = Blueprint('doc_scanner', __name__, url_prefix='/doc-scanner')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-doc_scanner_bp = Blueprint('doc_scanner', __name__)
 
 
 def allowed_file(filename):
@@ -33,6 +32,10 @@ def scan_image():
     image_np = np.array(image)
 
     scanned_image = run_scan_by_image(image_np)
+
+    # TODO -> convert to text then save it in db
+    repository.save_receipt(receipt_content='TEST TEST')
+
     scanned_image_pil = Image.fromarray(scanned_image)
 
     img_byte_arr = io.BytesIO()
@@ -42,13 +45,6 @@ def scan_image():
     return send_file(img_byte_arr, mimetype='image/png')
 
 
-@app.route('/doc-scanner')
-def index():
-    return render_template('index.html')
-
-
-app.register_blueprint(doc_scanner_bp, url_prefix='/doc-scanner')
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port)
+@doc_scanner_bp.route('/count', methods=['POST'])
+def get_count():
+    return repository.count_receipts(), 200

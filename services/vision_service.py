@@ -10,7 +10,6 @@ class VisionService:
     def detect_text_in_image(self, image_content):
 
         encoded_image = base64.b64encode(image_content).decode('utf-8')
-
         request_data = self.get_text_recognition_request_body(encoded_image)
 
         response = requests.post(self.text_recognition_url, json=request_data)

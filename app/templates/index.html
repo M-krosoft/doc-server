@@ -20,6 +20,8 @@
             reader.readAsDataURL(file);
         }
 
+
+
         function displayImage(event) {
             event.preventDefault();
 
@@ -33,19 +35,24 @@
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.blob();
+                    return response.json();
                 })
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const imgElement = document.getElementById('scannedImage');
-                    imgElement.src = url;
-                    imgElement.style.display = 'block';
-                })
+                .then(data => {
+                    if (data.detected_text) {
+                        const textDisplayElement = document.getElementById('scannedText');
+                        textDisplayElement.textContent = data.detected_text;
+                        textDisplayElement.style.display = 'block';
+                    } else {
+                        console.error('No text detected or returned');
+                        alert('Nie wykryto tekstu lub wystąpił błąd.');
+                    }
+                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Wystąpił błąd podczas skanowania.');
                 });
         }
+
     </script>
 
 </head>
@@ -69,8 +76,8 @@
             </div>
 
             <div class="column">
-                <h3>Scanned image:</h3>
-                <img id="scannedImage" alt="Scanned image"/>
+                <h3>Scanned text</h3>
+                <div id="scannedText"></div>
             </div>
         </div>
     </div>

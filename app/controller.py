@@ -6,6 +6,7 @@ from doc_scanner import run_scan_by_image
 from flask import Blueprint, jsonify, request, send_file, render_template
 from typing_extensions import deprecated
 
+from services.receipt_text_preprocessing import ReceiptTextPreprocessingService
 from services.vision_service import VisionService
 
 from app import repository
@@ -20,6 +21,7 @@ def allowed_file(filename):
 
 @doc_scanner_bp.route('/scan', methods=['POST'])
 def scan_image():
+    text_processing_service = ReceiptTextPreprocessingService()
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
 
@@ -36,7 +38,9 @@ def scan_image():
 
     try:
         detected_text = vision_service.detect_text_in_image(image_content)
-        repository.save_receipt(receipt_content=detected_text)
+        receipt_id = repository.save_receipt(receipt_content=detected_text)
+        products = text_processing_service.get_products_with_prices(detected_text)
+        repository.save_products(products=products, receipt_id=receipt_id)
         return jsonify({'detected_text': detected_text})
 
     except Exception as e:

@@ -1,6 +1,12 @@
 import base64
 import os
 import requests
+import logging
+
+logging.basicConfig(level=logging.ERROR)
+
+class VisionServiceError(Exception):
+    pass
 
 class VisionService:
     def __init__(self):
@@ -24,7 +30,11 @@ class VisionService:
             else:
                 return None
         except requests.exceptions.RequestException as e:
-            raise Exception(f"API error: {e}")
+            logging.error(f"API request failed: {e}")
+            raise VisionServiceError(f"API request failed: {e}") from e
+        except KeyError as e:
+            logging.error(f"Error parsing response: {e}")
+            raise VisionServiceError("Error parsing response from API") from e
 
     @staticmethod
     def get_text_recognition_request_body(encoded_image: str) -> dict:
@@ -36,7 +46,8 @@ class VisionService:
                     },
                     "features": [
                         {
-                            "type": "TEXT_DETECTION"
+                            "type": "DOCUMENT_TEXT_DETECTION",
+                            "maxResults": 1
                         }
                     ]
                 }

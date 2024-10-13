@@ -54,9 +54,8 @@ class DocScanPort:
 
 
 class DocScanApiKeyAdapter(DocScanPort):
-    def __init__(self, google_api_key: str):
-        self.api_key = google_api_key
-        self.vision_service = VisionService(api_key=self.api_key)
+    def __init__(self, vision_service: VisionService):
+        self.vision_service = vision_service
 
     @override
     def scan_image(self, file: FileStorage) -> io.BytesIO:

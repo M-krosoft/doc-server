@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, send_file
 
 from app.exceptions import InvalidFileExtensionError, RecognizeTextNotImplementedError
 from app.services.doc_scanner_port import DocScanPort, DocScanApiKeyAdapter, DocScanNoApiKeyAdapter
+from app.services.vision_service import VisionService
 
 
 class DocScanController:
@@ -11,7 +12,8 @@ class DocScanController:
 
     def _prepare_doc_scanner_port(self) -> DocScanPort:
         if self.google_api_key is not None and len(self.google_api_key) > 0:
-            return DocScanApiKeyAdapter(self.google_api_key)
+            vision_service = VisionService(self.google_api_key)
+            return DocScanApiKeyAdapter(vision_service)
         else:
             return DocScanNoApiKeyAdapter()
 

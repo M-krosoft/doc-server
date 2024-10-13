@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-from app.app_config import Config
+from app.app_config import _Config
 
 app_bp = Blueprint('app_bp', __name__)
 db = SQLAlchemy()
@@ -12,11 +12,14 @@ def index():
     return render_template('index.html')
 
 
-def create_app(config: Config):
-    from app.controller import doc_scanner_bp
+def create_app(config: _Config):
+    from app.controller import DocScanController
 
     _app = Flask(__name__)
     _app.config.from_object(config)
+
+    doc_scan_controller = DocScanController(config.GOOGLE_API_KEY)
+    doc_scanner_bp = doc_scan_controller.create_blueprint()
 
     _app.register_blueprint(app_bp)
     _app.register_blueprint(doc_scanner_bp)
